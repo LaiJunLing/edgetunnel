@@ -11,7 +11,7 @@ let subEmoji = 'true';
 let socks5Address = '';
 let parsedSocks5Address = {}; 
 let enableSocks = false;
-
+let forwardURL ='zhaoqing.city';
 let fakeUserID ;
 let fakeHostName ;
 let noTLS = 'false'; 
@@ -63,12 +63,14 @@ export default {
 			}
 
 			if (!userID) {
-				return new Response('请设置你的UUID变量，或尝试重试部署，检查变量是否生效？', { 
-					status: 404,
-					headers: {
-						"Content-Type": "text/plain;charset=utf-8",
-					}
-				});
+				const proxyUrl = "https://" + forwardURL + url.pathname + url.search;
+                                let modifiedRequest = new Request(proxyUrl, {
+                                          method: request.method,
+                                          headers: newHeaders,
+                                          body: request.body,
+                                          redirect: "manual",
+                                 });
+                                const proxyResponse = await fetch(modifiedRequest, { redirect: "manual" });
 			}
 			const currentDate = new Date();
 			currentDate.setHours(0, 0, 0, 0); 
